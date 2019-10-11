@@ -89,9 +89,9 @@ const freeram = new client.Gauge({
 })
 
 const scraperVersion = new client.Gauge({
-    name: "solar_scraper_info",
-    help: "Solar scraper version information",
-    labelNames: [ 'version' , 'hostname', 'buildId', 'ecuHost' ]
+    name: "energy_scraper_info",
+    help: "Energy scraper version information",
+    labelNames: [ 'version' , 'hostname', 'buildId' ]
 })
 
 
@@ -165,7 +165,7 @@ async function mqttReports() {
 /* GET metrics page. */
 router.get("/", async function(req, res, next) {
     try {
-        scraperVersion.labels(vars.vers, vars.hostname, vars.azureBuildNumber, vars.ecuHost).set(1);
+        scraperVersion.labels(vars.vers, vars.hostname, vars.azureBuildNumber).set(1);
         res.set('Content-Type', register.contentType);
         res.send(register.metrics());
     } catch (e) {
