@@ -24,7 +24,7 @@ stages:
     - task: Docker@2
       inputs:
         containerRegistry: 'DockerHub'
-        repository: 'djryanj/solar-scraper'
+        repository: 'djryanj/energry-scraper'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: 'dev'
