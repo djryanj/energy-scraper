@@ -12,7 +12,7 @@ const mqttHost = "mqtt://" + (process.env.MQTT_HOST || "192.168.2.5")
 const mqttPort = process.env.MQTT_PORT || "1883";
 const mqttUserName = process.env.MQTT_USERNAME || null;
 const mqttPass = process.env.MQTT_PASSWORD || null;
-const mqttTopic = process.env.MQTT_TOPIC || "prometheus/emonesp";
+const mqttTopic = process.env.MQTT_TOPIC || "prometheus/#";
 
 function getLocalGit() {
     try {
