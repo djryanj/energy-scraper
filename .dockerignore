@@ -1,0 +1,11 @@
+.dockerignore
+.env
+*/.git
+.git
+.gitignore
+*/.vs
+.vs
+*/node_modules
+node_modules
+Dockerfile
+runlog.log

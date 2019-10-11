@@ -1,0 +1,10 @@
+extends layout
+block content
+ h1 Energy Scraper
+ h3 Values only exported via /metrics endpoint.
+ hr
+ div#version Energy Scraper Version: #{version}
+   br
+   | Running on #{hostname}
+   br
+   | Azure build #: #{azureBuildNumber}
