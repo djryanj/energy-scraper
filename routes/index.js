@@ -5,6 +5,7 @@ const vars = require("../components/vars");
 /* GET home page. */
 router.get("/", async function(req, res, next) {
     try {
+        const result = {};
         result.version = vars.vers;
         result.hostname = vars.hostname;
         result.azureBuildNumber = vars.azureBuildNumber;

@@ -1,7 +1,8 @@
 extends layout
 block content
  h1 Energy Scraper
- h3 Values only exported via /metrics endpoint.
+ - var url = 'metrics';
+ h3 Values only exported via #[a(href='/' + url) /metrics] endpoint.
  hr
  div#version Energy Scraper Version: #{version}
    br
