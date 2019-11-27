@@ -8,7 +8,7 @@ const os = require("os");
 const hostname = os.hostname();
 
 // set these vars if you need to
-const mqttHost = "mqtt://" + (process.env.MQTT_HOST || "192.168.2.5")
+const mqttHost = "mqtt://" + (process.env.MQTT_HOST || "192.168.1.1")
 const mqttPort = process.env.MQTT_PORT || "1883";
 const mqttUserName = process.env.MQTT_USERNAME || null;
 const mqttPass = process.env.MQTT_PASSWORD || null;
