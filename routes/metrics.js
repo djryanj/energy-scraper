@@ -131,12 +131,12 @@ const CT1Counter = new client.Counter({
 });
 
 const CT2Counter = new client.Counter({
-    name: "home_current_2",
+    name: "home_current_2_counter",
     help: "Current amperage (current) on leg 2 of the home power feed in Amps (A)."
 });
 
 const totICounter = new client.Counter({
-    name: "home_total_current",
+    name: "home_total_current_counter",
     help: "Total amperage (current) for the home in Amps (A)"
 });
 
