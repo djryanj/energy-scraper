@@ -145,7 +145,7 @@ const PF = new client.Gauge({
     help: "Power factor of the home power feed.",
 })
 
-const temp = new client.Counter({
+const temp = new client.Gauge({
     name: "home_power_monitor_temp",
     help: "Current temperature of the home power feed in degrees C",
 })
@@ -243,40 +243,40 @@ async function mqttReports() {
             switch(topic) {
                 case watts:
                     W.set(parseFloat(message));
-                    wCounter.set(abs(parseFloat(message)));
+                    wCounter.inc(Math.abs(parseFloat(message)));
                     break;
                 case volts1:
-                    V1.set(parseFloat(message));
+                    V1.inc(parseFloat(message));
                     break;
                 case volts2:
-                    V2.set(parseFloat(message));
+                    V2.inc(parseFloat(message));
                     break;
                 case current1:
                     CT1.set(parseFloat(message));
-                    CT1Counter.set(abs(parseFloat(message)));
+                    CT1Counter.inc(Math.abs(parseFloat(message)));
                     break;
                 case current2:
                     CT2.set(parseFloat(message));
-                    CT2Counter.set(abs(parseFloat(message)));
+                    CT2Counter.inc(Math.abs(parseFloat(message)));
                     break;
                 case totalCurrent:
                     totI.set(parseFloat(message));
-                    totICounter.set(abs(parseFloat(message)));
+                    totICounter.inc(Math.abs(parseFloat(message)));
                     break;
                 case solarVolts:
-                    solarV.set(parseFloat(message))
+                    solarV.inc(parseFloat(message))
                     break;
                 case solarWatts:
-                    solarW.set(parseFloat(message))
+                    solarW.inc(parseFloat(message))
                     break;
                 case solarTotalCurrent:
-                    solarTotI.set(parseFloat(message))
+                    solarTotI.inc(parseFloat(message))
                     break;
                 case solarCurrent1:
-                    solarCT1.set(parseFloat(message))
+                    solarCT1.inc(parseFloat(message))
                     break;
                 case solarCurrent2:
-                    solarCT2.set(parseFloat(message))
+                    solarCT2.inc(parseFloat(message))
                     break;
                 case powerFactor:
                     PF.set(parseFloat(message));
@@ -291,19 +291,19 @@ async function mqttReports() {
                     ReactPow.set(parseFloat(message));
                     break;
                 case phase1:
-                    PhaseA.set(parseFloat(message));
+                    PhaseA.inc(parseFloat(message));
                     break;
                 case phase2:
-                    PhaseC.set(parseFloat(message));
+                    PhaseC.inc(parseFloat(message));
                     break;
                 case temperature:
                     temp.set(parseFloat(message));
                     break;
                 case frequency:
-                    freq.set(parseFloat(message));
+                    freq.inc(parseFloat(message));
                     break;
                 case ramfree:
-                    freeram.set(parseInt(message));
+                    freeram.inc(parseInt(message));
                     break;
             }
         })
@@ -315,7 +315,7 @@ async function mqttReports() {
 /* GET metrics page. */
 router.get("/", async function(req, res, next) {
     try {
-        scraperVersion.labels(vars.vers, vars.hostname, vars.azureBuildNumber).set(1);
+        scraperVersion.labels(vars.vers, vars.hostname, vars.azureBuildNumber).inc();
         res.set('Content-Type', register.contentType);
         res.send(register.metrics());
     } catch (e) {
