@@ -8,11 +8,15 @@ const os = require("os");
 const hostname = os.hostname();
 
 // set these vars if you need to
-const mqttHost = "mqtt://" + (process.env.MQTT_HOST || "192.168.1.1")
+const mqttHost = "mqtt://" + (process.env.MQTT_HOST || "mqtt.thewulph.com")
 const mqttPort = process.env.MQTT_PORT || "1883";
 const mqttUserName = process.env.MQTT_USERNAME || null;
 const mqttPass = process.env.MQTT_PASSWORD || null;
-const mqttTopic = process.env.MQTT_TOPIC || "prometheus/#";
+const mqttTopic = process.env.MQTT_TOPIC || "prometheus/emonesp";
+const monitorSolar = process.env.MONITOR_SOLAR || false;
+const useGaugesMains = process.env.MAINS_GAUGES || true;
+const useCountersMains = process.env.MAINS_COUNTERS || false;
+const monitorExtended = process.env.MONITOR_EXTENDED || false;
 
 function getLocalGit() {
     try {
@@ -51,4 +55,8 @@ module.exports = {
     mqttPass : mqttPass,
     mqttUserName : mqttUserName,
     mqttTopic : mqttTopic,
+    monitorSolar : monitorSolar,
+    useGaugesMains, useGaugesMains,
+    useCountersMains : useCountersMains,
+    monitorExtended : monitorExtended,
 }

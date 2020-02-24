@@ -30,6 +30,7 @@ const temperature = baseTopic+'/temp';
 const fundamentalPower = baseTopic+'/FundPow';
 const harmonicPower = baseTopic+'/HarPow';
 const reactivePower = baseTopic+'/ReactPow';
+const apparentPower = baseTopic+'/AppPow';
 const phase1 = baseTopic+'/PhaseA';
 const phase2 = baseTopic+'/PhaseC';
 const frequency = baseTopic+'/freq';
@@ -48,6 +49,7 @@ const topics = [
     fundamentalPower,
     harmonicPower,
     reactivePower,
+    apparentPower,
     phase1,
     phase2,
     solarWatts,
@@ -95,30 +97,31 @@ const totI = new client.Gauge({
     help: "Total amperage (current) for the home in Amps (A)"
 });
 
-const solarV = new client.Counter({
-    name: "solar_voltage",
-    help: "Current voltage of the solar power feed in Volts (V)."
-});
+const PF = new client.Gauge({
+    name: "home_power_factor",
+    help: "Power factor of the home power feed.",
+})
 
-const solarW = new client.Counter({
-    name: "solar_current_power_meter",
-    help: "Current total home power usage in Watts (W)."
-});
+const temp = new client.Gauge({
+    name: "home_power_monitor_temp",
+    help: "Current temperature of the home power feed in degrees C",
+})
 
-const solarCT1 = new client.Counter({
-    name: "solar_current_1",
-    help: "Current amperage (current) on leg 1 of the solar power feed in Amps (A)."
-});
+const freq = new client.Counter({
+    name: "home_grid_freq",
+    help: "Current grid frequency for home power feed in Hertz (Hz)",
+})
 
-const solarCT2 = new client.Counter({
-    name: "solar_current_2",
-    help: "Current amperage (current) on leg 2 of the solar power feed in Amps (A)."
-});
+const freeram = new client.Counter({
+    name: "home_power_monitor_free_ram",
+    help: "Power monitor free RAM in bytes (b)",
+})
 
-const solarTotI = new client.Counter({
-    name: "solar_total_current",
-    help: "Total amperage (current) for solar in in Amps (A)"
-});
+const scraperVersion = new client.Counter({
+    name: "energy_scraper_info",
+    help: "Energy scraper version information",
+    labelNames: [ 'version' , 'hostname', 'buildId' ]
+})
 
 const wCounter = new client.Counter({
     name: "home_current_power_counter",
@@ -140,20 +143,30 @@ const totICounter = new client.Counter({
     help: "Total amperage (current) for the home in Amps (A)"
 });
 
-const PF = new client.Gauge({
-    name: "home_power_factor",
-    help: "Power factor of the home power feed.",
-})
+const solarTotI = new client.Counter({
+    name: "solar_total_current",
+    help: "Total amperage (current) for solar in in Amps (A)"
+});
 
-const temp = new client.Gauge({
-    name: "home_power_monitor_temp",
-    help: "Current temperature of the home power feed in degrees C",
-})
+const solarV = new client.Counter({
+    name: "solar_voltage",
+    help: "Current voltage of the solar power feed in Volts (V)."
+});
 
-const freq = new client.Counter({
-    name: "home_grid_freq",
-    help: "Current grid frequency for home power feed in Hertz (Hz)",
-})
+const solarW = new client.Counter({
+    name: "solar_current_power",
+    help: "Current total home power usage in Watts (W)."
+});
+
+const solarCT1 = new client.Counter({
+    name: "solar_current_1",
+    help: "Current amperage (current) on leg 1 of the solar power feed in Amps (A)."
+});
+
+const solarCT2 = new client.Counter({
+    name: "solar_current_2",
+    help: "Current amperage (current) on leg 2 of the solar power feed in Amps (A)."
+});
 
 const FundPow = new client.Gauge({
     name: "home_fundamental_power",
@@ -185,43 +198,44 @@ const PhaseC = new client.Counter({
     help: "Current phase angle on leg 2 of the home power feed in degrees (°)",
 })
 
-const freeram = new client.Counter({
-    name: "home_power_monitor_free_ram",
-    help: "Power monitor free RAM in bytes (b)",
-})
-
-const scraperVersion = new client.Counter({
-    name: "energy_scraper_info",
-    help: "Energy scraper version information",
-    labelNames: [ 'version' , 'hostname', 'buildId' ]
-})
-
 register.registerMetric(V1);
 register.registerMetric(V2);
-register.registerMetric(W);
-register.registerMetric(CT1);
-register.registerMetric(CT2);
-register.registerMetric(totI);
-register.registerMetric(solarV);
-register.registerMetric(solarW);
-register.registerMetric(solarCT1);
-register.registerMetric(solarCT2);
-register.registerMetric(solarTotI);
-register.registerMetric(wCounter);
-register.registerMetric(CT1Counter);
-register.registerMetric(CT2Counter);
-register.registerMetric(totICounter);
 register.registerMetric(PF);
 register.registerMetric(temp);
 register.registerMetric(freq);
-register.registerMetric(FundPow);
-register.registerMetric(HarPow);
-register.registerMetric(ReactPow);
-register.registerMetric(AppPow);
-register.registerMetric(PhaseA);
-register.registerMetric(PhaseC);
 register.registerMetric(freeram);
 register.registerMetric(scraperVersion);
+
+if (vars.useGaugesMains) {
+    register.registerMetric(W);
+    register.registerMetric(CT1);
+    register.registerMetric(CT2);
+    register.registerMetric(totI);
+}
+
+if (vars.useCountersMains) {
+    register.registerMetric(wCounter);
+    register.registerMetric(CT1Counter);
+    register.registerMetric(CT2Counter);
+    register.registerMetric(totICounter);
+}
+
+if (vars.monitorSolar) {
+    register.registerMetric(solarV);
+    register.registerMetric(solarW);
+    register.registerMetric(solarCT1);
+    register.registerMetric(solarCT2);
+    register.registerMetric(solarTotI);
+}
+
+if (vars.monitorExtended) {
+    register.registerMetric(FundPow);
+    register.registerMetric(HarPow);
+    register.registerMetric(ReactPow);
+    register.registerMetric(AppPow);
+    register.registerMetric(PhaseA);
+    register.registerMetric(PhaseC);
+}
 
 // start mqtt on start of the software
 mqttReports();
@@ -242,8 +256,8 @@ async function mqttReports() {
         client.on('message', function (topic, message) {
             switch(topic) {
                 case watts:
-                    W.set(parseFloat(message));
-                    wCounter.inc(Math.abs(parseFloat(message)));
+                    if (vars.useGaugesMains) W.set(parseFloat(message));
+                    if (vars.useCountersMains) wCounter.inc(Math.abs(parseFloat(message)));
                     break;
                 case volts1:
                     V1.inc(parseFloat(message));
@@ -252,49 +266,52 @@ async function mqttReports() {
                     V2.inc(parseFloat(message));
                     break;
                 case current1:
-                    CT1.set(parseFloat(message));
-                    CT1Counter.inc(Math.abs(parseFloat(message)));
+                    if (vars.useGaugesMains) CT1.set(parseFloat(message));
+                    if (vars.useCountersMains) CT1Counter.inc(Math.abs(parseFloat(message)));
                     break;
                 case current2:
-                    CT2.set(parseFloat(message));
-                    CT2Counter.inc(Math.abs(parseFloat(message)));
+                    if (vars.useGaugesMains) CT2.set(parseFloat(message));
+                    if (vars.useCountersMains) CT2Counter.inc(Math.abs(parseFloat(message)));
                     break;
                 case totalCurrent:
-                    totI.set(parseFloat(message));
-                    totICounter.inc(Math.abs(parseFloat(message)));
+                    if (vars.useGaugesMains) totI.set(parseFloat(message));
+                    if (vars.useCountersMains) totICounter.inc(Math.abs(parseFloat(message)));
                     break;
                 case solarVolts:
-                    solarV.inc(parseFloat(message))
+                    if (vars.monitorSolar) solarV.inc(Math.abs(parseFloat(message)));
                     break;
                 case solarWatts:
-                    solarW.inc(parseFloat(message))
+                    if (vars.monitorSolar) solarW.inc(Math.abs(parseFloat(message)));
                     break;
                 case solarTotalCurrent:
-                    solarTotI.inc(parseFloat(message))
+                    if (vars.monitorSolar) solarTotI.inc(Math.abs(parseFloat(message)));
                     break;
                 case solarCurrent1:
-                    solarCT1.inc(parseFloat(message))
+                    if (vars.monitorSolar) solarCT1.inc(Math.abs(parseFloat(message)));
                     break;
                 case solarCurrent2:
-                    solarCT2.inc(parseFloat(message))
+                    if (vars.monitorSolar) solarCT2.inc(Math.abs(parseFloat(message)));
                     break;
                 case powerFactor:
                     PF.set(parseFloat(message));
                     break;
                 case fundamentalPower:
-                    FundPow.set(parseFloat(message));
+                    if (vars.monitorExtended) FundPow.set(parseFloat(message));
                     break;
                 case harmonicPower:
-                    HarPow.set(parseFloat(message));
+                    if (vars.monitorExtended) HarPow.set(parseFloat(message));
                     break;
                 case reactivePower:
-                    ReactPow.set(parseFloat(message));
+                    if (vars.monitorExtended) ReactPow.set(parseFloat(message));
+                    break;
+                case apparentPower:
+                    if (vars.monitorExtended) AppPow.set(parseFloat(message));
                     break;
                 case phase1:
-                    PhaseA.inc(parseFloat(message));
+                    if (vars.monitorExtended) PhaseA.inc(parseFloat(message));
                     break;
                 case phase2:
-                    PhaseC.inc(parseFloat(message));
+                    if (vars.monitorExtended) PhaseC.inc(parseFloat(message));
                     break;
                 case temperature:
                     temp.set(parseFloat(message));
