@@ -27,6 +27,10 @@ The following environment variables directly affect the operation of the scraper
 |``PORT`` | No |The port that the container listens on (internally). Be sure to change the port Docker forwards if you change this. | 3000
 |``MQTT_USERNAME`` | No | If you need to supply a username for your MQTT server, set it here. | null/unset (works for anonymous servers)
 | ``MQTT_PASSWORD`` | No | If you need to supply a password for your MQTT server, set it here. **IMPORTANT!** This will be visible in the logs and if you get container information from the Docker host. You could provide this via Docker secrets. | null/unset (works for anonymous servers)
+| ``MONITOR_SOLAR`` | No | If your Energy Meter is configured to monitor solar, set this to true. | False |
+| ``MAINS_GAUGES`` | No | Publish Prometheus [gauges](https://prometheus.io/docs/concepts/metric_types/#gauge) for the following MQTT topics sent by the meter: CT1, CT2, W, totI. See the [metrics](#metrics) section for more information. | True |
+| ``MAINS_COUNTERS`` | No | Publish Prometheus [counters](https://prometheus.io/docs/concepts/metric_types/#counter) for the following MQTT topics sent by the meter: CT1, CT2, W, totI. See the [metrics](#metrics) section for more information. | False |
+|``MONITOR_EXTENDED`` | No | If your meter is publishing the extended [metrics](#metrics), enable this to capture them. | False |
 
 
 ### Informational Environment Variables
@@ -55,21 +59,38 @@ All metrics are prefixed by ``home_`` (except one). The list of metrics is below
 
 ### Metrics
 
-|Metric|Description|MQTT Topic from Energy Meter * |
-|--|--|--|
-|``home_voltage_1``| Current voltage on leg 1 of the home power feed in Volts (V).| V1|
-|``home_voltage_2``| Current voltage on leg 2 of the home power feed in Volts (V).| V2|
-|``home_current_power``| Current total home power usage in Watts (W)| W|
-|``home_current_1``| Current amperage (current) on leg 1 of the home power feed in Amps (A).| CT1|
-|``home_current_2``| Current amperage (current) on leg 2 of the home power feed in Amps (A).| CT2 |
-|``home_total_current``| Total amperage (current) for the home in Amps (A).| totI | 
-|``home_power_factor``| Power factor of the home power feed.| PF | 
-|``home_power_monitor_temp``| Current temperature of the home power feed in degrees C| temp | 
-|``home_grid_freq``| Current grid frequency for home power feed in Hertz (Hz)| freq | 
-|``home_power_monitor_free_ram``| Power monitor free RAM in bytes (b)| freeram | 
-|``energy_scraper_info{version="<version>",hostname="<hostname>",buildId="<buildId>"}``| Version and other information. |
+|Metric|Type |Description|MQTT Topic from Energy Meter * |
+|--|--|--|--|
+|``home_voltage_1``| Counter | Current voltage on leg 1 of the home power feed in Volts (V). | V1|
+|``home_voltage_2``| Counter | Current voltage on leg 2 of the home power feed in Volts (V).| V2|
+|``home_current_power``| Gauge | Current total home power usage in Watts (W). Only published if the ``MAINS_GAUGES`` [environment variable](Configurable Environment Variables) is ``true``.| W|
+|``home_current_1``| Gauge | Current amperage (current) on leg 1 of the home power feed in Amps (A). Only published if the ``MAINS_GAUGES`` [environment variable](Configurable Environment Variables) is ``true``.| CT1|
+|``home_current_2``| Gauge | Current amperage (current) on leg 2 of the home power feed in Amps (A). Only published if the ``MAINS_GAUGES`` [environment variable](Configurable Environment Variables) is ``true``.| CT2 |
+|``home_total_current``| Gauge | Total amperage (current) usage for the home in Amps (A). Only published if the ``MAINS_GAUGES`` [environment variable](Configurable Environment Variables) is ``true``.| totI | 
+|``home_current_power_counter``| Counter | Absolute value of the current total home power usage in Watts (W). Only published if the ``MAINS_COUNTERS`` [environment variable](Configurable Environment Variables) is ``true``.| W|
+|``home_current_1_counter``| Counter | Absolute value of the current amperage (current) on leg 1 of the home power feed in Amps (A). Only published if the ``MAINS_COUNTERS`` [environment variable](Configurable Environment Variables) is ``true``.| CT1|
+|``home_current_2_counter``| Counter | Absolute value of the current amperage (current) on leg 2 of the home power feed in Amps (A). Only published if the ``MAINS_COUNTERS`` [environment variable](Configurable Environment Variables) is ``true``.| CT2 |
+|``home_total_current_counter``| Counter | Absolute value of the total amperage (current) usage for the home in Amps (A). Only published if the ``MAINS_COUNTERS`` [environment variable](Configurable Environment Variables) is ``true``.| totI | 
+| solar_current_1 | Counter | Current amperage (current) on leg 1 of the solar power feed in Amps (A). Only published if the ``MONITOR_SOLAR`` [environment variable](Configurable Environment Variables) is ``true``.|SCT1 |
+| solar_current_2 | Counter | Current amperage (current) on leg 2 of the solar power feed in Amps (A). Only published if the ``MONITOR_SOLAR`` [environment variable](Configurable Environment Variables) is ``true``.|SCT2 |
+| solar_current_power | Counter | Current total solar power output in Watts (W). Only published if the ``MONITOR_SOLAR`` [environment variable](Configurable Environment Variables) is ``true``. |SolarW |
+| solar_voltage | Counter | |SolarV |
+|``solar_total_current`` | Counter | Total solar feed amperage (current) output in Amps (A). Only published if the ``MONITOR_SOLAR`` [environment variable](Configurable Environment Variables) is ``true``. | totSolarI |
+|``home_power_factor``| Gauge | Power factor of the home power feed.| PF | 
+|``home_fundamental_power`` |Counter|Current fundamental power in Watts (W). Only published if the ``MONITOR_EXTENDED`` [environment variable](Configurable Environment Variables) is ``true``. | FundPow|
+|``home_harmonic_power`` |Counter | Current harmonic power Watts (W). Only published if the ``MONITOR_EXTENDED`` [environment variable](Configurable Environment Variables) is ``true``.| HarPow|
+|``home_reactive_power`` |Counter | Current reactive power in volt-amperes reactive (VAR). Only published if the ``MONITOR_EXTENDED`` [environment variable](Configurable Environment Variables) is ``true``.| ReactPow|
+|``home_apparent_power`` |Counter | Current apparent power in volt-amperes (VA). Only published if the ``MONITOR_EXTENDED`` [environment variable](Configurable Environment Variables) is ``true``.| AppPow|
+|``home_phase_1``|Counter | Current phase angle on leg 1 of the home power feed in degrees (°). Only published if the ``MONITOR_EXTENDED`` [environment variable](Configurable Environment Variables) is ``true``.| PhaseA|
+| ``home_phase_2``|Counter | Current phase angle on leg 1 of the home power feed in degrees (°). Only published if the ``MONITOR_EXTENDED`` [environment variable](Configurable Environment Variables) is ``true``.| PhaseC|
+|``home_power_monitor_temp``| Gauge | Current temperature of the home power feed in degrees C| temp | 
+|``home_grid_freq``| Counter | Current grid frequency for home power feed in Hertz (Hz)| freq | 
+|``home_power_monitor_free_ram``| Counter | Power monitor free RAM in bytes (b)| freeram | 
+|``energy_scraper_info{version="<version>",hostname="<hostname>",buildId="<buildId>"}``| Gauge | Version and other information. |
 
 *Note: The MQTT topics represented here as published by the Energy Meter are prefaced by the MQTT Base Topic entered into the EmonESP interface, e.g. ``emon/emonesp``
+
+*Note on Prometheus [counters](https://prometheus.io/docs/concepts/metric_types/#counter) and [gauges](https://prometheus.io/docs/concepts/metric_types/#gauge): As a general statement, gauges are more intuitive to look at for humans because they provide the exact last value, which is why they are published by default. On the other hand, counters increment continuously and getting the current value requires using a ``rate()`` or ``irate()`` function. However, once accounted for properly, counters tend to provide more functionality and less subsequent processing with downstream tools to give real data.
 
 ## MQTT
 
