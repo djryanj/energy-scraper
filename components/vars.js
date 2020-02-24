@@ -8,11 +8,11 @@ const os = require("os");
 const hostname = os.hostname();
 
 // set these vars if you need to
-const mqttHost = "mqtt://" + (process.env.MQTT_HOST || "mqtt.thewulph.com")
+const mqttHost = "mqtt://" + (process.env.MQTT_HOST || "192.168.1.1")
 const mqttPort = process.env.MQTT_PORT || "1883";
 const mqttUserName = process.env.MQTT_USERNAME || null;
 const mqttPass = process.env.MQTT_PASSWORD || null;
-const mqttTopic = process.env.MQTT_TOPIC || "prometheus/emonesp";
+const mqttTopic = process.env.MQTT_TOPIC || "prometheus/#";
 const monitorSolar = process.env.MONITOR_SOLAR || false;
 const useGaugesMains = process.env.MAINS_GAUGES || true;
 const useCountersMains = process.env.MAINS_COUNTERS || false;
