@@ -125,22 +125,26 @@ const scraperVersion = new client.Counter({
 
 const wCounter = new client.Counter({
     name: "home_current_power_counter",
-    help: "Current total home power usage in Watts (W)."
+    help: "Current total home power usage in Watts (W).",
+    labelNames: ['exporting']
 });
 
 const CT1Counter = new client.Counter({
     name: "home_current_1_counter",
-    help: "Current amperage (current) on leg 1 of the home power feed in Amps (A)."
+    help: "Current amperage (current) on leg 1 of the home power feed in Amps (A).",
+    labelNames: ['exporting']
 });
 
 const CT2Counter = new client.Counter({
     name: "home_current_2_counter",
-    help: "Current amperage (current) on leg 2 of the home power feed in Amps (A)."
+    help: "Current amperage (current) on leg 2 of the home power feed in Amps (A).",
+    labelNames: ['exporting']
 });
 
 const totICounter = new client.Counter({
     name: "home_total_current_counter",
-    help: "Total amperage (current) for the home in Amps (A)"
+    help: "Total amperage (current) for the home in Amps (A)",
+    labelNames: ['exporting']
 });
 
 const solarTotI = new client.Counter({
@@ -237,6 +241,15 @@ if (vars.monitorExtended) {
     register.registerMetric(PhaseC);
 }
 
+function setCounter(counter, message) {
+    val = parseFloat(message);
+    if (val < 0) {
+        counter.inc({exporting: 'true'}, Math.abs(val));
+    } else {
+        counter.inc({exporting: 'false'}, Math.abs(val));
+    }  
+}
+
 // start mqtt on start of the software
 mqttReports();
 
@@ -257,7 +270,7 @@ async function mqttReports() {
             switch(topic) {
                 case watts:
                     if (vars.useGaugesMains) W.set(parseFloat(message));
-                    if (vars.useCountersMains) wCounter.inc(Math.abs(parseFloat(message)));
+                    if (vars.useCountersMains) setCounter(wCounter, message);
                     break;
                 case volts1:
                     V1.inc(parseFloat(message));
@@ -267,15 +280,15 @@ async function mqttReports() {
                     break;
                 case current1:
                     if (vars.useGaugesMains) CT1.set(parseFloat(message));
-                    if (vars.useCountersMains) CT1Counter.inc(Math.abs(parseFloat(message)));
+                    if (vars.useCountersMains) setCounter(CT1Counter, message);
                     break;
                 case current2:
                     if (vars.useGaugesMains) CT2.set(parseFloat(message));
-                    if (vars.useCountersMains) CT2Counter.inc(Math.abs(parseFloat(message)));
+                    if (vars.useCountersMains) setCounter(CT2Counter, message);
                     break;
                 case totalCurrent:
                     if (vars.useGaugesMains) totI.set(parseFloat(message));
-                    if (vars.useCountersMains) totICounter.inc(Math.abs(parseFloat(message)));
+                    if (vars.useCountersMains) setCounter(totICounter, message);
                     break;
                 case solarVolts:
                     if (vars.monitorSolar) solarV.inc(Math.abs(parseFloat(message)));
