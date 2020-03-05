@@ -245,8 +245,10 @@ function setCounter(counter, message) {
     val = parseFloat(message);
     if (val < 0) {
         counter.inc({exporting: 'true'}, Math.abs(val));
+        counter.inc({exporting: 'false'}, 0);
     } else {
         counter.inc({exporting: 'false'}, Math.abs(val));
+        counter.inc({exporting: 'true'}, 0);
     }  
 }
 
