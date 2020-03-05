@@ -63,26 +63,26 @@ All metrics are prefixed by ``home_`` (except one). The list of metrics is below
 |--|--|--|--|
 |``home_voltage_1``| Counter | Current voltage on leg 1 of the home power feed in Volts (V). | V1|
 |``home_voltage_2``| Counter | Current voltage on leg 2 of the home power feed in Volts (V).| V2|
-|``home_current_power``| Gauge | Current total home power usage in Watts (W). Only published if the ``MAINS_GAUGES`` [environment variable](Configurable Environment Variables) is ``true``.| W|
-|``home_current_1``| Gauge | Current amperage (current) on leg 1 of the home power feed in Amps (A). Only published if the ``MAINS_GAUGES`` [environment variable](Configurable Environment Variables) is ``true``.| CT1|
-|``home_current_2``| Gauge | Current amperage (current) on leg 2 of the home power feed in Amps (A). Only published if the ``MAINS_GAUGES`` [environment variable](Configurable Environment Variables) is ``true``.| CT2 |
-|``home_total_current``| Gauge | Total amperage (current) usage for the home in Amps (A). Only published if the ``MAINS_GAUGES`` [environment variable](Configurable Environment Variables) is ``true``.| totI | 
-|``home_current_power_counter``| Counter | Absolute value of the current total home power usage in Watts (W). Only published if the ``MAINS_COUNTERS`` [environment variable](Configurable Environment Variables) is ``true``.| W|
-|``home_current_1_counter``| Counter | Absolute value of the current amperage (current) on leg 1 of the home power feed in Amps (A). Only published if the ``MAINS_COUNTERS`` [environment variable](Configurable Environment Variables) is ``true``.| CT1|
-|``home_current_2_counter``| Counter | Absolute value of the current amperage (current) on leg 2 of the home power feed in Amps (A). Only published if the ``MAINS_COUNTERS`` [environment variable](Configurable Environment Variables) is ``true``.| CT2 |
-|``home_total_current_counter``| Counter | Absolute value of the total amperage (current) usage for the home in Amps (A). Only published if the ``MAINS_COUNTERS`` [environment variable](Configurable Environment Variables) is ``true``.| totI | 
-| solar_current_1 | Counter | Current amperage (current) on leg 1 of the solar power feed in Amps (A). Only published if the ``MONITOR_SOLAR`` [environment variable](Configurable Environment Variables) is ``true``.|SCT1 |
-| solar_current_2 | Counter | Current amperage (current) on leg 2 of the solar power feed in Amps (A). Only published if the ``MONITOR_SOLAR`` [environment variable](Configurable Environment Variables) is ``true``.|SCT2 |
-| solar_current_power | Counter | Current total solar power output in Watts (W). Only published if the ``MONITOR_SOLAR`` [environment variable](Configurable Environment Variables) is ``true``. |SolarW |
-| solar_voltage | Counter | |SolarV |
-|``solar_total_current`` | Counter | Total solar feed amperage (current) output in Amps (A). Only published if the ``MONITOR_SOLAR`` [environment variable](Configurable Environment Variables) is ``true``. | totSolarI |
+|``home_current_power``| Gauge | Current total home power usage in Watts (W). Only published if the ``MAINS_GAUGES`` [environment variable](#configurable-environment-variables) is ``true``.| W|
+|``home_current_1``| Gauge | Current amperage (current) on leg 1 of the home power feed in Amps (A). Only published if the ``MAINS_GAUGES`` [environment variable](#configurable-environment-variables) is ``true``.| CT1|
+|``home_current_2``| Gauge | Current amperage (current) on leg 2 of the home power feed in Amps (A). Only published if the ``MAINS_GAUGES``  [environment variable](#configurable-environment-variables) is ``true``.| CT2 |
+|``home_total_current``| Gauge | Total amperage (current) usage for the home in Amps (A). Only published if the ``MAINS_GAUGES``  [environment variable](#configurable-environment-variables) is ``true``.| totI | 
+|``home_current_power_counter``| Counter | Absolute value of the current total home power usage in Watts (W). Only published if the ``MAINS_COUNTERS``  [environment variable](#configurable-environment-variables) is ``true``.| W|
+|``home_current_1_counter``| Counter | Absolute value of the current amperage (current) on leg 1 of the home power feed in Amps (A). Only published if the ``MAINS_COUNTERS``  [environment variable](#configurable-environment-variables) is ``true``.| CT1|
+|``home_current_2_counter``| Counter | Absolute value of the current amperage (current) on leg 2 of the home power feed in Amps (A). Only published if the ``MAINS_COUNTERS``  [environment variable](#configurable-environment-variables) is ``true``.| CT2 |
+|``home_total_current_counter``| Counter | Absolute value of the total amperage (current) usage for the home in Amps (A). Only published if the ``MAINS_COUNTERS``  [environment variable](#configurable-environment-variables) is ``true``.| totI | 
+| ``solar_current_1`` | Counter | Current amperage (current) on leg 1 of the solar power feed in Amps (A). Only published if the ``MONITOR_SOLAR``  [environment variable](#configurable-environment-variables) is ``true``.|SCT1 |
+| ``solar_current_2`` | Counter | Current amperage (current) on leg 2 of the solar power feed in Amps (A). Only published if the ``MONITOR_SOLAR``  [environment variable](#configurable-environment-variables) is ``true``.|SCT2 |
+| ``solar_current_power`` | Counter | Current total solar power output in Watts (W). Only published if the ``MONITOR_SOLAR``  [environment variable](#configurable-environment-variables) is ``true``. |SolarW |
+| ``solar_voltage`` | Counter | |SolarV |
+|``solar_total_current`` | Counter | Total solar feed amperage (current) output in Amps (A). Only published if the ``MONITOR_SOLAR``  [environment variable](#configurable-environment-variables) is ``true``. | totSolarI |
 |``home_power_factor``| Gauge | Power factor of the home power feed.| PF | 
-|``home_fundamental_power`` |Counter|Current fundamental power in Watts (W). Only published if the ``MONITOR_EXTENDED`` [environment variable](Configurable Environment Variables) is ``true``. | FundPow|
-|``home_harmonic_power`` |Counter | Current harmonic power Watts (W). Only published if the ``MONITOR_EXTENDED`` [environment variable](Configurable Environment Variables) is ``true``.| HarPow|
-|``home_reactive_power`` |Counter | Current reactive power in volt-amperes reactive (VAR). Only published if the ``MONITOR_EXTENDED`` [environment variable](Configurable Environment Variables) is ``true``.| ReactPow|
-|``home_apparent_power`` |Counter | Current apparent power in volt-amperes (VA). Only published if the ``MONITOR_EXTENDED`` [environment variable](Configurable Environment Variables) is ``true``.| AppPow|
-|``home_phase_1``|Counter | Current phase angle on leg 1 of the home power feed in degrees (°). Only published if the ``MONITOR_EXTENDED`` [environment variable](Configurable Environment Variables) is ``true``.| PhaseA|
-| ``home_phase_2``|Counter | Current phase angle on leg 1 of the home power feed in degrees (°). Only published if the ``MONITOR_EXTENDED`` [environment variable](Configurable Environment Variables) is ``true``.| PhaseC|
+|``home_fundamental_power`` |Counter|Current fundamental power in Watts (W). Only published if the ``MONITOR_EXTENDED``  [environment variable](#configurable-environment-variables) is ``true``. | FundPow|
+|``home_harmonic_power`` |Counter | Current harmonic power Watts (W). Only published if the ``MONITOR_EXTENDED``  [environment variable](#configurable-environment-variables) is ``true``.| HarPow|
+|``home_reactive_power`` |Counter | Current reactive power in volt-amperes reactive (VAR). Only published if the ``MONITOR_EXTENDED``  [environment variable](#configurable-environment-variables) is ``true``.| ReactPow|
+|``home_apparent_power`` |Counter | Current apparent power in volt-amperes (VA). Only published if the ``MONITOR_EXTENDED``  [environment variable](#configurable-environment-variables) is ``true``.| AppPow|
+|``home_phase_1``|Counter | Current phase angle on leg 1 of the home power feed in degrees (°). Only published if the ``MONITOR_EXTENDED``  [environment variable](#configurable-environment-variables) is ``true``.| PhaseA|
+| ``home_phase_2``|Counter | Current phase angle on leg 1 of the home power feed in degrees (°). Only published if the ``MONITOR_EXTENDED``  [environment variable](#configurable-environment-variables) is ``true``.| PhaseC|
 |``home_power_monitor_temp``| Gauge | Current temperature of the home power feed in degrees C| temp | 
 |``home_grid_freq``| Counter | Current grid frequency for home power feed in Hertz (Hz)| freq | 
 |``home_power_monitor_free_ram``| Counter | Power monitor free RAM in bytes (b)| freeram | 
