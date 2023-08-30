@@ -2,13 +2,13 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
-- dev
+- main
 
 resources:
 - repo: self
 
 variables:
-  tagBase: 'dev-$(Build.BuildNumber)'
+  tagBase: '$(Build.BuildNumber)'
   repo: djryanj.azurecr.io
   image: energy-scraper
 
