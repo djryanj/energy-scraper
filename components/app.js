@@ -56,6 +56,6 @@ const healthCheck = gracefulShutdown.getHealthHandler({
   notHealthy,
   test: gracefulShutdown.healthTest,
 });
-app.get("/health", healthCheck);
+app.get("/healthz", healthCheck);
 
 module.exports = app;
