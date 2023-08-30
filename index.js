@@ -4,6 +4,9 @@
  * Module dependencies.
  */
 
+if (process.env.NODE_ENV === "dev") {
+  require("dotenv").config();
+}
 var app = require("./components/app");
 var debug = require("debug")("energy-scraper:server");
 var http = require("http");
@@ -94,6 +97,7 @@ function onListening() {
 }
 
 function logConfigData() {
+  console.log("Staring solar-scraper environent: " + process.env.NODE_ENV);
   console.log(
     "Current configuration data (see documentation for how to set these with environment variables): "
   );

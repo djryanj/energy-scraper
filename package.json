@@ -5,18 +5,20 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./index",
-    "dev": "nodemon ./index"
+    "dev": "cross-env NODE_ENV=dev nodemon ./index"
   },
   "dependencies": {
-    "async-mqtt": "^2.4.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.17.3",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "mqtt": "^4.3.2",
+    "mqtt": "^4.3.7",
     "prom-client": "^11.5.3",
     "pug": "^3.0.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1"
+  }
 }
