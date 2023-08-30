@@ -1,4 +1,5 @@
 var createError = require("http-errors");
+var gracefulShutdown = require("@neurocode.io/k8s-graceful-shutdown");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
@@ -8,7 +9,7 @@ var indexRouter = require("../routes/index");
 var metricsRouter = require("../routes/metrics");
 
 var app = express();
-
+app.disable("x-powered-by");
 // view engine setup
 app.set("views", path.join(__dirname, "..", "views"));
 app.set("view engine", "pug");
@@ -41,5 +42,20 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
+
+const healthy = (req, res) => {
+  res.send("ok");
+};
+
+const notHealthy = (req, res) => {
+  res.status(503).send("failed");
+};
+
+const healthCheck = gracefulShutdown.getHealthHandler({
+  healthy,
+  notHealthy,
+  test: gracefulShutdown.healthTest,
+});
+app.get("/health", healthCheck);
 
 module.exports = app;

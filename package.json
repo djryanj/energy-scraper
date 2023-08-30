@@ -8,6 +8,7 @@
     "dev": "cross-env NODE_ENV=dev nodemon ./index"
   },
   "dependencies": {
+    "@neurocode.io/k8s-graceful-shutdown": "^1.5.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.17.3",
