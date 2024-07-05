@@ -198,6 +198,11 @@ async function mqttReports() {
       );
     });
 
+    client.on('error', function (error) {
+      console.log(error)
+    })
+    
+
     await client.subscribe(topics);
     client.on("message", function (topic, message) {
       switch (topic) {
