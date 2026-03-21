@@ -12,6 +12,7 @@
     "check": "node --check ./bin/www && node --check ./components/app.js && node --check ./components/metrics-runtime.js && node --check ./components/vars.js",
     "test": "node --test",
     "test:coverage": "node --test --experimental-test-coverage",
+    "test:live-mqtt": "cross-env RUN_REAL_MQTT_TEST=1 node --test ./test/integration/real-mqtt.test.js",
     "test:watch": "node --test --watch",
     "release:bump:patch": "node ./scripts/bump-version.js patch",
     "release:bump:minor": "node ./scripts/bump-version.js minor",

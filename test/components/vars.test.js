@@ -57,6 +57,18 @@ test("createConfig normalizes MQTT settings and runtime metadata", () => {
   assert.equal(config.hostname, "test-host");
 });
 
+test("createConfig supports ESPHome MQTT topic layout", () => {
+  const config = vars.createConfig({
+    MQTT_TOPIC: "prometheus/emonesp",
+    MQTT_TOPIC_LAYOUT: "esphome",
+    MQTT_DEVICE_NAME: "energy-meter",
+  });
+
+  assert.equal(config.mqttTopic, "prometheus/emonesp/");
+  assert.equal(config.mqttTopicLayout, "esphome");
+  assert.equal(config.mqttDeviceName, "energy-meter");
+});
+
 test("parseBoolean rejects invalid boolean values", () => {
   assert.throws(() => vars.parseBoolean("sometimes"), /Invalid boolean value/);
 });
@@ -64,4 +76,11 @@ test("parseBoolean rejects invalid boolean values", () => {
 test("normalizeMqttTopic removes wildcards and preserves a single trailing slash", () => {
   assert.equal(vars.normalizeMqttTopic("prometheus/#"), "prometheus/");
   assert.equal(vars.normalizeMqttTopic("home/energy/"), "home/energy/");
+});
+
+test("parseMqttTopicLayout rejects invalid layout values", () => {
+  assert.throws(
+    () => vars.parseMqttTopicLayout("unknown"),
+    /Invalid MQTT topic layout/,
+  );
 });
