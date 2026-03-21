@@ -23,7 +23,7 @@
     "@neurocode.io/k8s-graceful-shutdown": "^1.5.1",
     "debug": "~2.6.9",
     "express": "^4.22.1",
-    "http-errors": "~1.8.1",
+    "http-errors": "~2.0.1",
     "morgan": "^1.10.1",
     "mqtt": "^4.3.8",
     "prom-client": "^15.1.3",
