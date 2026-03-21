@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This repository uses GitHub Releases and Release Please to manage release notes and version history.
 
+## [0.5.1](https://github.com/djryanj/energy-scraper/compare/v0.5.0...v0.5.1) (2026-03-21)
+
+
+### Bug Fixes
+
+* **deps:** update npm dependencies ([779e93a](https://github.com/djryanj/energy-scraper/commit/779e93a05f091e493f48191cdd663c43ccf0fe42))
+
 ## [0.5.0](https://github.com/djryanj/energy-scraper/compare/v0.4.1...v0.5.0) (2026-03-21)
 
 
