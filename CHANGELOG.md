@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This repository uses GitHub Releases and Release Please to manage release notes and version history.
 
+## [0.4.0](https://github.com/djryanj/energy-scraper/compare/v0.3.1...v0.4.0) (2026-03-21)
+
+
+### Features
+
+* modernize runtime and add release automation ([412b82e](https://github.com/djryanj/energy-scraper/commit/412b82ea63e58b21aa816a16f3eb224efbbfcdfe))
+* modernize runtime and add release automation ([148709c](https://github.com/djryanj/energy-scraper/commit/148709cf93996f1743e401cd59830fb33e4f56b7))
+
 ## [0.3.1] - 2026-03-21
 
 ### Changed
