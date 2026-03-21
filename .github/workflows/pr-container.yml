@@ -71,6 +71,8 @@ jobs:
             GIT_SHA=${{ github.event.pull_request.head.sha }}
             GIT_REF=${{ github.event.pull_request.head.ref }}
             RELEASE_VERSION=pr-${{ github.event.pull_request.number }}
+          provenance: false
+          sbom: false
           push: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
