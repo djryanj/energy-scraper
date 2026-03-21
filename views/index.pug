@@ -1,11 +1,26 @@
 extends layout
 block content
  h1 Energy Scraper
- - var url = 'metrics';
- h3 Values only exported via #[a(href='/' + url) /metrics] endpoint.
+ p MQTT-backed Prometheus exporter for CircuitSetup and EmonESP energy monitor data.
+ p
+   | Runtime endpoints:
+   |
+   a(href='/metrics') /metrics
+   |  and
+   a(href='/healthz') /healthz
  hr
- div#version Energy Scraper Version: #{version}
-   br
-   | Running on #{hostname}
-   br
-   | Azure build #: #{azureBuildNumber}
+ dl
+   dt Version
+   dd #{version}
+   dt Release
+   dd #{releaseVersion}
+   dt Git Ref
+   dd #{gitRef}
+   dt Git SHA
+   dd #{gitSha}
+   dt Hostname
+   dd #{hostname}
+   dt Build Number
+   dd #{buildNumber}
+   dt MQTT Topic Base
+   dd #{mqttTopic}

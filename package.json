@@ -2,18 +2,28 @@
   "name": "energy-scraper",
   "version": "0.3.1",
   "private": true,
-  "main": "index.js",
+  "main": "components/app.js",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
-    "start": "node ./index",
-    "dev": "cross-env NODE_ENV=dev nodemon ./index"
+    "start": "node ./bin/www",
+    "dev": "node --watch --env-file=.env ./bin/www",
+    "check": "node --check ./bin/www && node --check ./components/app.js && node --check ./components/metrics-runtime.js && node --check ./components/vars.js",
+    "test": "node --test",
+    "test:coverage": "node --test --experimental-test-coverage",
+    "test:watch": "node --test --watch",
+    "release:bump:patch": "node ./scripts/bump-version.js patch",
+    "release:bump:minor": "node ./scripts/bump-version.js minor",
+    "release:bump:major": "node ./scripts/bump-version.js major",
+    "release:draft": "node ./scripts/create-release-draft.js"
   },
   "dependencies": {
     "@neurocode.io/k8s-graceful-shutdown": "^1.5.1",
-    "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
-    "express": "~4.17.3",
+    "express": "^4.22.1",
     "http-errors": "~1.6.3",
-    "morgan": "~1.9.1",
+    "morgan": "^1.10.1",
     "mqtt": "^4.3.7",
     "prom-client": "^11.5.3",
     "pug": "^3.0.2"
