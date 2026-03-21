@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This repository uses GitHub Releases and Release Please to manage release notes and version history.
 
+## [0.5.0](https://github.com/djryanj/energy-scraper/compare/v0.4.1...v0.5.0) (2026-03-21)
+
+
+### Features
+
+* support ESPHome MQTT topic layout ([4e3da19](https://github.com/djryanj/energy-scraper/commit/4e3da191673d2dea331f65818546722effd18b08))
+* support ESPHome MQTT topic layout ([a3a586e](https://github.com/djryanj/energy-scraper/commit/a3a586e7e32f94d16732c8209a1e474e6a17cedb))
+
 ## [0.4.1](https://github.com/djryanj/energy-scraper/compare/v0.4.0...v0.4.1) (2026-03-21)
 
 
