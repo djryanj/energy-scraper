@@ -163,7 +163,10 @@ function createMetricsRuntime(
     });
   }
 
-  const topicMap = buildTopicMap(config.mqttTopic);
+  const topicMap = buildTopicMap(config.mqttTopic, {
+    mqttTopicLayout: config.mqttTopicLayout,
+    mqttDeviceName: config.mqttDeviceName,
+  });
   let mqttClient;
 
   function start() {
@@ -338,30 +341,56 @@ function createMetricsRuntime(
   };
 }
 
-function buildTopicMap(baseTopic) {
+function buildTopicMap(
+  baseTopic,
+  { mqttTopicLayout = "emonesp", mqttDeviceName = null } = {},
+) {
+  const topicPath = createTopicPathBuilder(baseTopic, {
+    mqttTopicLayout,
+    mqttDeviceName,
+  });
+
   return {
-    watts: `${baseTopic}grid_house_watts/state`,
-    voltage1: `${baseTopic}house_l1_volts/state`,
-    voltage2: `${baseTopic}house_l2_volts/state`,
-    current1: `${baseTopic}house_l1_amps/state`,
-    current2: `${baseTopic}house_l2_amps/state`,
-    totalCurrent: `${baseTopic}grid_house_amps/state`,
-    solarCurrentPower: `${baseTopic}total_solar_watts/state`,
-    solarCurrent1: `${baseTopic}solar_l1_amps/state`,
-    solarCurrent2: `${baseTopic}solar_l2_amps/state`,
-    solarTotalCurrent: `${baseTopic}total_solar_amps/state`,
-    solarVoltage: `${baseTopic}solar_volts/state`,
-    gridFrequency: `${baseTopic}freq/state`,
-    powerFactor: `${baseTopic}pf/state`,
-    fundamentalPower: `${baseTopic}fund_pow/state`,
-    harmonicPower: `${baseTopic}har_pow/state`,
-    reactivePower: `${baseTopic}react_pow/state`,
-    apparentPower: `${baseTopic}app_pow/state`,
-    phase1: `${baseTopic}phase_a/state`,
-    phase2: `${baseTopic}phase_c/state`,
-    temperature: `${baseTopic}temp/state`,
-    freeRam: `${baseTopic}freeram/state`,
+    watts: topicPath("grid_house_watts"),
+    voltage1: topicPath("house_l1_volts"),
+    voltage2: topicPath("house_l2_volts"),
+    current1: topicPath("house_l1_amps"),
+    current2: topicPath("house_l2_amps"),
+    totalCurrent: topicPath("grid_house_amps"),
+    solarCurrentPower: topicPath("total_solar_watts"),
+    solarCurrent1: topicPath("solar_l1_amps"),
+    solarCurrent2: topicPath("solar_l2_amps"),
+    solarTotalCurrent: topicPath("total_solar_amps"),
+    solarVoltage: topicPath("solar_volts"),
+    gridFrequency: topicPath("freq"),
+    powerFactor: topicPath("pf"),
+    fundamentalPower: topicPath("fund_pow"),
+    harmonicPower: topicPath("har_pow"),
+    reactivePower: topicPath("react_pow"),
+    apparentPower: topicPath("app_pow"),
+    phase1: topicPath("phase_a"),
+    phase2: topicPath("phase_c"),
+    temperature: topicPath("temp"),
+    freeRam: topicPath("freeram"),
   };
+}
+
+function createTopicPathBuilder(
+  baseTopic,
+  { mqttTopicLayout = "emonesp", mqttDeviceName = null } = {},
+) {
+  if (mqttTopicLayout === "esphome") {
+    if (!mqttDeviceName) {
+      throw new Error(
+        "MQTT_DEVICE_NAME is required when MQTT_TOPIC_LAYOUT is set to esphome",
+      );
+    }
+
+    return (metricName) =>
+      `${baseTopic}sensor/${mqttDeviceName}_${metricName}/state`;
+  }
+
+  return (metricName) => `${baseTopic}${metricName}/state`;
 }
 
 function setGauge(gauge, rawValue, { absolute = false } = {}) {

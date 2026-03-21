@@ -56,6 +56,18 @@ function normalizeMqttTopic(value, fallback = "prometheus") {
   return `${topic}/`;
 }
 
+function parseMqttTopicLayout(value, fallback = "emonesp") {
+  const layout = String(value || fallback)
+    .trim()
+    .toLowerCase();
+
+  if (["emonesp", "esphome"].includes(layout)) {
+    return layout;
+  }
+
+  throw new Error(`Invalid MQTT topic layout: ${value}`);
+}
+
 function getLocalGit(fsModule = fs) {
   try {
     const rev = fsModule.readFileSync(".git/HEAD", "utf8").trim();
@@ -108,6 +120,8 @@ function createConfig(
   const mqttUserName = env.MQTT_USERNAME || null;
   const mqttPass = env.MQTT_PASSWORD || null;
   const mqttTopic = normalizeMqttTopic(env.MQTT_TOPIC, "prometheus");
+  const mqttTopicLayout = parseMqttTopicLayout(env.MQTT_TOPIC_LAYOUT, "emonesp");
+  const mqttDeviceName = (env.MQTT_DEVICE_NAME || "").trim() || null;
   const monitorSolar = parseBoolean(env.MONITOR_SOLAR, false);
   const useGaugesMains = parseBoolean(env.MAINS_GAUGES, true);
   const useCountersMains = parseBoolean(env.MAINS_COUNTERS, false);
@@ -143,6 +157,8 @@ function createConfig(
     mqttUserName,
     mqttPass,
     mqttTopic,
+    mqttTopicLayout,
+    mqttDeviceName,
     monitorSolar,
     useGaugesMains,
     useCountersMains,
@@ -157,6 +173,8 @@ function createConfig(
         port,
         mqttUrl,
         mqttTopic,
+        mqttTopicLayout,
+        mqttDeviceName,
         monitorSolar,
         useGaugesMains,
         useCountersMains,
@@ -179,6 +197,7 @@ module.exports = {
   parseBoolean,
   parseInteger,
   normalizeMqttTopic,
+  parseMqttTopicLayout,
   buildMqttUrl,
   toShortGitSha,
   createConfig,

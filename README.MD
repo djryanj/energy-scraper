@@ -26,6 +26,10 @@ Run the automated test suite with `npm test`.
 
 Print a terminal coverage summary with `npm run test:coverage`.
 
+Run the opt-in live MQTT integration test with `npm run test:live-mqtt`.
+
+The live test uses `broker.example.invalid` as a safe placeholder for `MQTT_HOST`. Set `MQTT_HOST` to your real broker before running it. Other defaults are `prometheus/emonesp`, `MQTT_TOPIC_LAYOUT=esphome`, and `MQTT_DEVICE_NAME=energy-meter`.
+
 Use `npm run test:watch` while iterating locally.
 
 ## Repository Files
@@ -99,6 +103,8 @@ Configuration is done through environment variables only.
 | `MQTT_HOST`        | Yes      | IP address or hostname of the MQTT broker. A scheme such as `mqtt://` or `mqtts://` is allowed.                                | `192.168.1.1` |
 | `MQTT_TOPIC`       | Yes      | Base topic for the energy monitor messages. The app normalizes this to a clean base path and strips a trailing `#` if present. | `prometheus/` |
 | `MQTT_PORT`        | No       | TCP port for the MQTT broker if not already included in `MQTT_HOST`.                                                           | `1883`        |
+| `MQTT_TOPIC_LAYOUT`| No       | MQTT topic layout. Use `emonesp` for flat topics like `base/grid_house_watts/state`, or `esphome` for topics under `sensor/<device>_<metric>/state`. | `emonesp`     |
+| `MQTT_DEVICE_NAME` | No       | Required when `MQTT_TOPIC_LAYOUT=esphome`. Device name prefix used in ESPHome sensor topics, for example `energy-meter`.     | unset         |
 | `PORT`             | No       | Internal HTTP listen port.                                                                                                     | `3000`        |
 | `MQTT_USERNAME`    | No       | MQTT username.                                                                                                                 | unset         |
 | `MQTT_PASSWORD`    | No       | MQTT password.                                                                                                                 | unset         |
@@ -150,6 +156,8 @@ Extended metrics are only emitted when `MONITOR_EXTENDED=true`, and solar metric
 
 ## MQTT Topic Mapping
 
+Default `emonesp` layout:
+
 The scraper subscribes to the base topic plus suffixes such as:
 
 - `grid_house_watts/state`
@@ -170,6 +178,14 @@ When solar monitoring is enabled it also subscribes to:
 - `solar_l1_amps/state`
 - `solar_l2_amps/state`
 - `solar_volts/state`
+
+Optional `esphome` layout:
+
+Set `MQTT_TOPIC_LAYOUT=esphome` and `MQTT_DEVICE_NAME=<device-name>` for topics like:
+
+- `prometheus/emonesp/sensor/energy-meter_grid_house_watts/state`
+- `prometheus/emonesp/sensor/energy-meter_house_l1_volts/state`
+- `prometheus/emonesp/sensor/energy-meter_total_solar_amps/state`
 
 ## Prometheus Config
 

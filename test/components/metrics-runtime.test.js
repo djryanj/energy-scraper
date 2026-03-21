@@ -41,3 +41,56 @@ test("metrics runtime records MQTT payloads and emits info metrics", async () =>
     /energy_scraper_info\{version="1.2.3-main-abcdef1",hostname=/,
   );
 });
+
+test("metrics runtime builds ESPHome topic paths when configured", () => {
+  const config = vars.createConfig({
+    MQTT_TOPIC: "prometheus/emonesp",
+    MQTT_TOPIC_LAYOUT: "esphome",
+    MQTT_DEVICE_NAME: "energy-meter",
+  });
+  const runtime = metricsRuntime.createMetricsRuntime(config);
+
+  assert.equal(
+    runtime.topicMap.watts,
+    "prometheus/emonesp/sensor/energy-meter_grid_house_watts/state",
+  );
+  assert.equal(
+    runtime.topicMap.voltage1,
+    "prometheus/emonesp/sensor/energy-meter_house_l1_volts/state",
+  );
+  assert.equal(
+    runtime.topicMap.solarTotalCurrent,
+    "prometheus/emonesp/sensor/energy-meter_total_solar_amps/state",
+  );
+});
+
+test("metrics runtime records ESPHome-layout MQTT payloads", async () => {
+  const config = vars.createConfig({
+    MQTT_TOPIC: "prometheus/emonesp",
+    MQTT_TOPIC_LAYOUT: "esphome",
+    MQTT_DEVICE_NAME: "energy-meter",
+    MONITOR_SOLAR: "true",
+    MAINS_GAUGES: "true",
+    MAINS_COUNTERS: "true",
+  });
+  const runtime = metricsRuntime.createMetricsRuntime(config);
+
+  runtime.handleMessage(
+    runtime.topicMap.watts,
+    Buffer.from("2557.8"),
+  );
+  runtime.handleMessage(
+    runtime.topicMap.totalCurrent,
+    Buffer.from("43.73"),
+  );
+  runtime.handleMessage(
+    runtime.topicMap.solarTotalCurrent,
+    Buffer.from("4.32"),
+  );
+
+  const body = await runtime.metrics();
+
+  assert.match(body, /home_current_power\{exporting="false"\} 2557.8/);
+  assert.match(body, /home_total_current\{exporting="false"\} 43.73/);
+  assert.match(body, /solar_total_current 4.32/);
+});
