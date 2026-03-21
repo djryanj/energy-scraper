@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This repository uses GitHub Releases and Release Please to manage release notes and version history.
 
+## [0.4.1](https://github.com/djryanj/energy-scraper/compare/v0.4.0...v0.4.1) (2026-03-21)
+
+
+### Bug Fixes
+
+* **ci:** publish release container tags correctly ([18c0dfe](https://github.com/djryanj/energy-scraper/commit/18c0dfe1b2a58bf70f24b59fa3e677baeca8c0ad))
+* **ci:** publish release container tags correctly ([fb3e266](https://github.com/djryanj/energy-scraper/commit/fb3e266e672304b170feeb363b0ec22a1697cc96))
+
 ## [0.4.0](https://github.com/djryanj/energy-scraper/compare/v0.3.1...v0.4.0) (2026-03-21)
 
 
