@@ -47,7 +47,7 @@ jobs:
           echo "IMAGE_REPOSITORY=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/energy-scraper" >> "$GITHUB_ENV"
 
       - name: Check out repository at release tag
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ needs.release-please.outputs.tag_name }}
 
