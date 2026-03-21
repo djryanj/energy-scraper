@@ -79,7 +79,7 @@ jobs:
             org.opencontainers.image.revision=${{ env.RELEASE_SHA }}
 
       - name: Build and push release image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile
