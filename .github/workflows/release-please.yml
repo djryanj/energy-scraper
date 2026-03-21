@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  packages: write
   pull-requests: write
 
 concurrency:
@@ -16,10 +17,96 @@ concurrency:
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+      sha: ${{ steps.release.outputs.sha }}
 
     steps:
       - name: Run Release Please
+        id: release
         uses: googleapis/release-please-action@v4
         with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
           config-file: .release-please-config.json
           manifest-file: .release-please-manifest.json
+
+  publish-release-container:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Normalize image coordinates
+        run: |
+          echo "IMAGE_REGISTRY=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_ENV"
+          echo "IMAGE_REPOSITORY=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/energy-scraper" >> "$GITHUB_ENV"
+
+      - name: Check out repository at release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Generate release metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_REPOSITORY }}
+          flavor: |
+            latest=false
+          tags: |
+            type=raw,value=${{ needs.release-please.outputs.tag_name }}
+            type=raw,value=${{ needs.release-please.outputs.version }}
+            type=semver,pattern={{version}},value=${{ needs.release-please.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.release-please.outputs.version }}
+            type=semver,pattern={{major}},value=${{ needs.release-please.outputs.version }}
+            type=raw,value=latest
+          labels: |
+            org.opencontainers.image.title=energy-scraper
+            org.opencontainers.image.description=CircuitSetup Split Single Phase Energy Monitor Prometheus exporter
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.version=${{ needs.release-please.outputs.tag_name }}
+            org.opencontainers.image.revision=${{ needs.release-please.outputs.sha }}
+
+      - name: Build and push release image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          build-args: |
+            GIT_SHA=${{ needs.release-please.outputs.sha }}
+            GIT_REF=${{ needs.release-please.outputs.tag_name }}
+            RELEASE_VERSION=${{ needs.release-please.outputs.tag_name }}
+          provenance: false
+          sbom: false
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=release-container
+          cache-to: type=gha,mode=max,scope=release-container
+
+      - name: Write workflow summary
+        run: |
+          echo "## Release container" >> "$GITHUB_STEP_SUMMARY"
+          echo "Published release tags for ${IMAGE_REPOSITORY}." >> "$GITHUB_STEP_SUMMARY"
+          echo "Release: ${{ needs.release-please.outputs.tag_name }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Tags:" >> "$GITHUB_STEP_SUMMARY"
+          echo '${{ steps.meta.outputs.tags }}' >> "$GITHUB_STEP_SUMMARY"

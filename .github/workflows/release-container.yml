@@ -1,16 +1,19 @@
 name: Release Container
 
 on:
-  release:
-    types:
-      - published
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to publish, for example v0.4.0
+        required: true
+        type: string
 
 permissions:
   contents: read
   packages: write
 
 concurrency:
-  group: release-container-${{ github.event.release.tag_name }}
+  group: release-container-${{ inputs.tag }}
   cancel-in-progress: false
 
 env:
@@ -28,7 +31,7 @@ jobs:
 
       - name: Normalize release version
         run: |
-          release_tag='${{ github.event.release.tag_name }}'
+          release_tag='${{ inputs.tag }}'
           release_version="${release_tag#v}"
           echo "RELEASE_TAG=${release_tag}" >> "$GITHUB_ENV"
           echo "RELEASE_VERSION=${release_version}" >> "$GITHUB_ENV"
@@ -36,7 +39,10 @@ jobs:
       - name: Check out repository at release tag
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ inputs.tag }}
+
+      - name: Resolve release SHA
+        run: echo "RELEASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -70,7 +76,7 @@ jobs:
             org.opencontainers.image.description=CircuitSetup Split Single Phase Energy Monitor Prometheus exporter
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.version=${{ env.RELEASE_TAG }}
-            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.revision=${{ env.RELEASE_SHA }}
 
       - name: Build and push release image
         uses: docker/build-push-action@v6
@@ -79,9 +85,11 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           build-args: |
-            GIT_SHA=${{ github.sha }}
+            GIT_SHA=${{ env.RELEASE_SHA }}
             GIT_REF=${{ env.RELEASE_TAG }}
             RELEASE_VERSION=${{ env.RELEASE_TAG }}
+          provenance: false
+          sbom: false
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

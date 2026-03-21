@@ -51,13 +51,13 @@ This repo now includes GitHub Actions workflows for CI, PR containers, release c
 - `PR Container` builds a multi-architecture image for non-draft pull requests.
 - For pull requests opened from branches in the same repository, it pushes the image to GitHub Container Registry as `ghcr.io/<owner>/energy-scraper:pr-<number>` and `ghcr.io/<owner>/energy-scraper:pr-<number>-<sha>`.
 - For pull requests opened from forks, it still performs the build but skips the push for safety.
-- `Cleanup PR Container` deletes the PR container versions after the pull request is merged.
+- `Cleanup PR Container` deletes the PR container versions after the pull request is closed.
 
 ### Releases
 
 - `Release Please` runs on pushes to `main` and maintains a release PR plus GitHub Releases.
 - Releases are driven by Conventional Commits so the generated changelog and version bump are correct.
-- When a GitHub Release is published, `Release Container` builds and pushes the final multi-architecture image to GitHub Container Registry.
+- When Release Please creates a GitHub Release, the same workflow also builds and pushes the final multi-architecture image to GitHub Container Registry.
 - Release container tags include the exact GitHub release tag, the plain version without the `v` prefix, the `major.minor` line, the `major` line, and `latest`.
 - The container build workflows bake `RELEASE_VERSION`, `GIT_REF`, and `GIT_SHA` into the image so runtime metadata reflects the actual GitHub release or PR build.
 
@@ -71,7 +71,7 @@ Use this for normal releases. It keeps `package.json`, `package-lock.json`, the 
 3. Review the release PR. It will include the version bump and changelog updates.
 4. Merge the release PR into `main`.
 5. Release Please will create and publish the GitHub Release.
-6. The `Release Container` workflow will build and publish the multi-arch image for that release.
+6. The Release Please workflow will create the GitHub Release and publish the multi-arch image for that release.
 
 Manual fallback:
 Use this only when you need to force a specific version bump yourself.
@@ -86,7 +86,7 @@ Use this only when you need to force a specific version bump yourself.
    - `npm run release:draft`
    - or `npm run release:draft -- v0.4.0` to force a specific tag name
 5. Publish the GitHub release draft.
-6. The `Release Container` workflow will publish the final container image for that release tag.
+6. Run the `Release Container` workflow manually with the release tag, for example `v0.4.0`, to publish the final container image for that release tag.
 
 ## Configuration
 
