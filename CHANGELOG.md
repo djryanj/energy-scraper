@@ -8,6 +8,7 @@ This repository uses GitHub Releases and Release Please to manage release notes 
 
 ### Changed
 
+- chore(deps): update node.js to v24.15.0 ([#57](https://github.com/djryanj/energy-scraper/pull/57))
 - chore(deps): update dependency node to v24.15.0 ([#56](https://github.com/djryanj/energy-scraper/pull/56))
 - chore(deps): lock file maintenance ([#55](https://github.com/djryanj/energy-scraper/pull/55))
 - chore(deps): update npm dependencies ([#54](https://github.com/djryanj/energy-scraper/pull/54))
