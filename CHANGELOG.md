@@ -6,24 +6,19 @@ This repository uses GitHub Releases and Release Please to manage release notes 
 
 ## [0.5.2](https://github.com/djryanj/energy-scraper/compare/v0.5.1...v0.5.2) (2026-03-21)
 
-
-
 ### Changed
 
 - chore(deps): update actions/github-script action to v9 ([#53](https://github.com/djryanj/energy-scraper/pull/53))
-
-### Bug Fixes
-
-* **deps:** update dependency debug to v4 ([52f7a58](https://github.com/djryanj/energy-scraper/commit/52f7a5888bf79c5ce615b755725066027b28d251))
-* **deps:** update dependency debug to v4 ([bd047d4](https://github.com/djryanj/energy-scraper/commit/bd047d4f5e40cc713a6c4c6b718e37bd04387522))
-* **deps:** update dependency express to v5 ([858a7a9](https://github.com/djryanj/energy-scraper/commit/858a7a95bb5f362cbff299461705c2adefdde27e))
-* **deps:** update dependency express to v5 ([3dc5bf5](https://github.com/djryanj/energy-scraper/commit/3dc5bf533237b72d83f75458747e6d2a50bce1fb))
-* **deps:** update dependency http-errors to v2 ([752bbfe](https://github.com/djryanj/energy-scraper/commit/752bbfeb829558e41259010a52f1c6c8fbb4b194))
-* **deps:** update dependency http-errors to v2 ([fd7a97d](https://github.com/djryanj/energy-scraper/commit/fd7a97dc2671ee6f52aa70e57d55a02a9775c9b4))
-* **deps:** update dependency mqtt to v5 ([79a3776](https://github.com/djryanj/energy-scraper/commit/79a377627cfd6f6ada4e43a5fe59a892a4716206))
-* **deps:** update dependency mqtt to v5 ([4dce1f2](https://github.com/djryanj/energy-scraper/commit/4dce1f21be705b880a27065f2bdaad27dd2290a6))
-* **deps:** update dependency prom-client to v15 ([1ec1a39](https://github.com/djryanj/energy-scraper/commit/1ec1a39af1315ab89aa11458b1f302da1eefd022))
-* **deps:** update dependency prom-client to v15 ([5e293fc](https://github.com/djryanj/energy-scraper/commit/5e293fcc454eb949e108e2457370299c0368723b))
+- **deps:** update dependency debug to v4 ([52f7a58](https://github.com/djryanj/energy-scraper/commit/52f7a5888bf79c5ce615b755725066027b28d251))
+- **deps:** update dependency debug to v4 ([bd047d4](https://github.com/djryanj/energy-scraper/commit/bd047d4f5e40cc713a6c4c6b718e37bd04387522))
+- **deps:** update dependency express to v5 ([858a7a9](https://github.com/djryanj/energy-scraper/commit/858a7a95bb5f362cbff299461705c2adefdde27e))
+- **deps:** update dependency express to v5 ([3dc5bf5](https://github.com/djryanj/energy-scraper/commit/3dc5bf533237b72d83f75458747e6d2a50bce1fb))
+- **deps:** update dependency http-errors to v2 ([752bbfe](https://github.com/djryanj/energy-scraper/commit/752bbfeb829558e41259010a52f1c6c8fbb4b194))
+- **deps:** update dependency http-errors to v2 ([fd7a97d](https://github.com/djryanj/energy-scraper/commit/fd7a97dc2671ee6f52aa70e57d55a02a9775c9b4))
+- **deps:** update dependency mqtt to v5 ([79a3776](https://github.com/djryanj/energy-scraper/commit/79a377627cfd6f6ada4e43a5fe59a892a4716206))
+- **deps:** update dependency mqtt to v5 ([4dce1f2](https://github.com/djryanj/energy-scraper/commit/4dce1f21be705b880a27065f2bdaad27dd2290a6))
+- **deps:** update dependency prom-client to v15 ([1ec1a39](https://github.com/djryanj/energy-scraper/commit/1ec1a39af1315ab89aa11458b1f302da1eefd022))
+- **deps:** update dependency prom-client to v15 ([5e293fc](https://github.com/djryanj/energy-scraper/commit/5e293fcc454eb949e108e2457370299c0368723b))
 
 ## [0.5.1](https://github.com/djryanj/energy-scraper/compare/v0.5.0...v0.5.1) (2026-03-21)
 
