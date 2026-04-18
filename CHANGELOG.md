@@ -7,6 +7,11 @@ This repository uses GitHub Releases and Release Please to manage release notes 
 ## [0.5.2](https://github.com/djryanj/energy-scraper/compare/v0.5.1...v0.5.2) (2026-03-21)
 
 
+
+### Changed
+
+- chore(deps): update actions/github-script action to v9 ([#53](https://github.com/djryanj/energy-scraper/pull/53))
+
 ### Bug Fixes
 
 * **deps:** update dependency debug to v4 ([52f7a58](https://github.com/djryanj/energy-scraper/commit/52f7a5888bf79c5ce615b755725066027b28d251))
