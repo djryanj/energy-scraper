@@ -8,6 +8,7 @@ This repository uses GitHub Releases and Release Please to manage release notes 
 
 ### Changed
 
+- chore(deps): update dependency node to v24.15.0 ([#56](https://github.com/djryanj/energy-scraper/pull/56))
 - chore(deps): lock file maintenance ([#55](https://github.com/djryanj/energy-scraper/pull/55))
 - chore(deps): update npm dependencies ([#54](https://github.com/djryanj/energy-scraper/pull/54))
 - chore(deps): update actions/github-script action to v9 ([#53](https://github.com/djryanj/energy-scraper/pull/53))
