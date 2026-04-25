@@ -4,10 +4,15 @@ All notable changes to this project will be documented in this file.
 
 This repository uses GitHub Releases and Release Please to manage release notes and version history.
 
+## [0.5.4](https://github.com/djryanj/energy-scraper/compare/v0.5.3...v0.5.4) (Unreleased)
+
+### Changed
+
+- chore(deps): update googleapis/release-please-action action to v5 ([#58](https://github.com/djryanj/energy-scraper/pull/58))
+
 ## [0.5.3](https://github.com/djryanj/energy-scraper/compare/v0.5.2...v0.5.3) (2026-04-18)
 
-
-### Bug Fixes
+### Changed
 
 * **deps:** update dependency mqtt to ^5.15.1 ([77460b1](https://github.com/djryanj/energy-scraper/commit/77460b1a65fc59b071a605db7fc6b04df0567a87))
 * **deps:** update dependency mqtt to ^5.15.1 ([b5d2c39](https://github.com/djryanj/energy-scraper/commit/b5d2c391b8b35eebb804d9dcb228aa00d682de66))
