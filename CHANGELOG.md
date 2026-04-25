@@ -7,6 +7,11 @@ This repository uses GitHub Releases and Release Please to manage release notes 
 ## [0.5.3](https://github.com/djryanj/energy-scraper/compare/v0.5.2...v0.5.3) (2026-04-18)
 
 
+
+### Changed
+
+- chore(deps): update googleapis/release-please-action action to v5 ([#58](https://github.com/djryanj/energy-scraper/pull/58))
+
 ### Bug Fixes
 
 * **deps:** update dependency mqtt to ^5.15.1 ([77460b1](https://github.com/djryanj/energy-scraper/commit/77460b1a65fc59b071a605db7fc6b04df0567a87))
