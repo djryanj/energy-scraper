@@ -8,6 +8,7 @@ This repository uses GitHub Releases and Release Please to manage release notes 
 
 ### Changed
 
+- chore(deps): bump ip-address from 10.1.0 to 10.2.0 ([#60](https://github.com/djryanj/energy-scraper/pull/60))
 - chore(deps): update googleapis/release-please-action action to v5 ([#58](https://github.com/djryanj/energy-scraper/pull/58))
 
 ## [0.5.3](https://github.com/djryanj/energy-scraper/compare/v0.5.2...v0.5.3) (2026-04-18)
