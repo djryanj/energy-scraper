@@ -8,6 +8,7 @@ This repository uses GitHub Releases and Release Please to manage release notes 
 
 ### Changed
 
+- chore(deps): bump qs from 6.15.1 to 6.15.2 ([#64](https://github.com/djryanj/energy-scraper/pull/64))
 - chore(deps): update googleapis/release-please-action action to v5 ([#58](https://github.com/djryanj/energy-scraper/pull/58))
 
 ## [0.5.3](https://github.com/djryanj/energy-scraper/compare/v0.5.2...v0.5.3) (2026-04-18)
