@@ -79,6 +79,23 @@ function createMetricsRuntime(
       help: "Current power monitor free RAM in bytes.",
       registers: [registry],
     }),
+    lastValidReading: new clientLib.Gauge({
+      name: "home_scraper_last_valid_reading_timestamp_seconds",
+      help: "Unix timestamp of the last time a metric received a finite (parseable) MQTT reading.",
+      labelNames: ["metric"],
+      registers: [registry],
+    }),
+    invalidReadings: new clientLib.Counter({
+      name: "home_scraper_invalid_reading_total",
+      help: "Count of MQTT payloads for a metric that could not be parsed as a finite number (e.g. NaN, empty, non-numeric) and were therefore discarded.",
+      labelNames: ["metric"],
+      registers: [registry],
+    }),
+  };
+
+  const tracking = {
+    lastValidReading: metrics.lastValidReading,
+    invalidReadings: metrics.invalidReadings,
   };
 
   if (config.useGaugesMains) {
@@ -217,21 +234,33 @@ function createMetricsRuntime(
     switch (topic) {
       case topicMap.watts:
         if (metrics.currentPower) {
-          setDirectionalGauge(metrics.currentPower, message);
+          setDirectionalGauge(metrics.currentPower, message, {
+            tracking,
+            name: "home_current_power",
+          });
         }
         if (metrics.currentPowerCounter) {
           incrementDirectionalCounter(metrics.currentPowerCounter, message);
         }
         break;
       case topicMap.voltage1:
-        setGauge(metrics.voltage1, message);
+        setGauge(metrics.voltage1, message, {
+          tracking,
+          name: "home_voltage_1",
+        });
         break;
       case topicMap.voltage2:
-        setGauge(metrics.voltage2, message);
+        setGauge(metrics.voltage2, message, {
+          tracking,
+          name: "home_voltage_2",
+        });
         break;
       case topicMap.current1:
         if (metrics.current1) {
-          setDirectionalGauge(metrics.current1, message);
+          setDirectionalGauge(metrics.current1, message, {
+            tracking,
+            name: "home_current_1",
+          });
         }
         if (metrics.current1Counter) {
           incrementDirectionalCounter(metrics.current1Counter, message);
@@ -239,7 +268,10 @@ function createMetricsRuntime(
         break;
       case topicMap.current2:
         if (metrics.current2) {
-          setDirectionalGauge(metrics.current2, message);
+          setDirectionalGauge(metrics.current2, message, {
+            tracking,
+            name: "home_current_2",
+          });
         }
         if (metrics.current2Counter) {
           incrementDirectionalCounter(metrics.current2Counter, message);
@@ -247,7 +279,10 @@ function createMetricsRuntime(
         break;
       case topicMap.totalCurrent:
         if (metrics.totalCurrent) {
-          setDirectionalGauge(metrics.totalCurrent, message);
+          setDirectionalGauge(metrics.totalCurrent, message, {
+            tracking,
+            name: "home_total_current",
+          });
         }
         if (metrics.totalCurrentCounter) {
           incrementDirectionalCounter(metrics.totalCurrentCounter, message);
@@ -255,58 +290,110 @@ function createMetricsRuntime(
         break;
       case topicMap.solarCurrentPower:
         if (metrics.solarCurrentPower) {
-          setGauge(metrics.solarCurrentPower, message, { absolute: true });
+          setGauge(metrics.solarCurrentPower, message, {
+            absolute: true,
+            tracking,
+            name: "solar_current_power",
+          });
         }
         break;
       case topicMap.solarTotalCurrent:
         if (metrics.solarTotalCurrent) {
-          setGauge(metrics.solarTotalCurrent, message, { absolute: true });
+          setGauge(metrics.solarTotalCurrent, message, {
+            absolute: true,
+            tracking,
+            name: "solar_total_current",
+          });
         }
         break;
       case topicMap.solarCurrent1:
         if (metrics.solarCurrent1) {
-          setGauge(metrics.solarCurrent1, message, { absolute: true });
+          setGauge(metrics.solarCurrent1, message, {
+            absolute: true,
+            tracking,
+            name: "solar_current_1",
+          });
         }
         break;
       case topicMap.solarCurrent2:
         if (metrics.solarCurrent2) {
-          setGauge(metrics.solarCurrent2, message, { absolute: true });
+          setGauge(metrics.solarCurrent2, message, {
+            absolute: true,
+            tracking,
+            name: "solar_current_2",
+          });
         }
         break;
       case topicMap.solarVoltage:
         if (metrics.solarVoltage) {
-          setGauge(metrics.solarVoltage, message, { absolute: true });
+          setGauge(metrics.solarVoltage, message, {
+            absolute: true,
+            tracking,
+            name: "solar_voltage",
+          });
         }
         break;
       case topicMap.gridFrequency:
-        setGauge(metrics.gridFrequency, message, { absolute: true });
+        setGauge(metrics.gridFrequency, message, {
+          absolute: true,
+          tracking,
+          name: "home_grid_freq",
+        });
         break;
       case topicMap.powerFactor:
-        setGauge(metrics.powerFactor, message);
+        setGauge(metrics.powerFactor, message, {
+          tracking,
+          name: "home_power_factor",
+        });
         break;
       case topicMap.fundamentalPower:
-        setGauge(metrics.fundamentalPower, message);
+        setGauge(metrics.fundamentalPower, message, {
+          tracking,
+          name: "home_fundamental_power",
+        });
         break;
       case topicMap.harmonicPower:
-        setGauge(metrics.harmonicPower, message);
+        setGauge(metrics.harmonicPower, message, {
+          tracking,
+          name: "home_harmonic_power",
+        });
         break;
       case topicMap.reactivePower:
-        setGauge(metrics.reactivePower, message);
+        setGauge(metrics.reactivePower, message, {
+          tracking,
+          name: "home_reactive_power",
+        });
         break;
       case topicMap.apparentPower:
-        setGauge(metrics.apparentPower, message);
+        setGauge(metrics.apparentPower, message, {
+          tracking,
+          name: "home_apparent_power",
+        });
         break;
       case topicMap.phase1:
-        setGauge(metrics.phase1, message);
+        setGauge(metrics.phase1, message, {
+          tracking,
+          name: "home_phase_1",
+        });
         break;
       case topicMap.phase2:
-        setGauge(metrics.phase2, message);
+        setGauge(metrics.phase2, message, {
+          tracking,
+          name: "home_phase_2",
+        });
         break;
       case topicMap.temperature:
-        setGauge(metrics.temperature, message);
+        setGauge(metrics.temperature, message, {
+          tracking,
+          name: "home_power_monitor_temp",
+        });
         break;
       case topicMap.freeRam:
-        setGauge(metrics.freeRam, message, { absolute: true });
+        setGauge(metrics.freeRam, message, {
+          absolute: true,
+          tracking,
+          name: "home_power_monitor_free_ram",
+        });
         break;
       default:
         break;
@@ -393,31 +480,51 @@ function createTopicPathBuilder(
   return (metricName) => `${baseTopic}${metricName}/state`;
 }
 
-function setGauge(gauge, rawValue, { absolute = false } = {}) {
+function setGauge(gauge, rawValue, { absolute = false, tracking, name } = {}) {
   const value = Number.parseFloat(rawValue);
 
   if (!Number.isFinite(value)) {
+    recordInvalidReading(tracking, name);
     return;
   }
 
   gauge.set(absolute ? Math.abs(value) : value);
+  recordValidReading(tracking, name);
 }
 
-function setDirectionalGauge(gauge, rawValue) {
+function setDirectionalGauge(gauge, rawValue, { tracking, name } = {}) {
   const value = Number.parseFloat(rawValue);
 
   if (!Number.isFinite(value)) {
+    recordInvalidReading(tracking, name);
     return;
   }
 
   if (value < 0) {
     gauge.set({ exporting: "true" }, Math.abs(value));
     gauge.set({ exporting: "false" }, 0);
+  } else {
+    gauge.set({ exporting: "false" }, Math.abs(value));
+    gauge.set({ exporting: "true" }, 0);
+  }
+
+  recordValidReading(tracking, name);
+}
+
+function recordValidReading(tracking, name) {
+  if (!tracking || !name) {
     return;
   }
 
-  gauge.set({ exporting: "false" }, Math.abs(value));
-  gauge.set({ exporting: "true" }, 0);
+  tracking.lastValidReading.set({ metric: name }, Date.now() / 1000);
+}
+
+function recordInvalidReading(tracking, name) {
+  if (!tracking || !name) {
+    return;
+  }
+
+  tracking.invalidReadings.inc({ metric: name });
 }
 
 function incrementDirectionalCounter(counter, rawValue) {

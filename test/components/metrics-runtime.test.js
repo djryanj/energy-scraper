@@ -94,3 +94,45 @@ test("metrics runtime records ESPHome-layout MQTT payloads", async () => {
   assert.match(body, /home_total_current\{exporting="false"\} 43.73/);
   assert.match(body, /solar_total_current 4.32/);
 });
+
+test("a NaN MQTT payload is discarded, keeps the last valid gauge value, and is counted as invalid", async () => {
+  const config = vars.createConfig({
+    MQTT_TOPIC: "prometheus/emonesp",
+    MQTT_TOPIC_LAYOUT: "esphome",
+    MQTT_DEVICE_NAME: "energy-meter",
+    MAINS_GAUGES: "true",
+  });
+  const runtime = metricsRuntime.createMetricsRuntime(config);
+
+  runtime.handleMessage(runtime.topicMap.watts, Buffer.from("-1500"));
+  const bodyBeforeNaN = await runtime.metrics();
+  assert.match(bodyBeforeNaN, /home_current_power\{exporting="true"\} 1500/);
+
+  const timestampBefore = bodyBeforeNaN.match(
+    /home_scraper_last_valid_reading_timestamp_seconds\{metric="home_current_power"\} (\S+)/,
+  )[1];
+  assert.ok(Number.isFinite(Number(timestampBefore)));
+
+  // A sensor that has gone stale on the publishing device (e.g. a broken
+  // ESPHome template sensor) sends the literal string "nan" instead of a
+  // number. The gauge must not be clobbered by this, but it also must not
+  // look fresh: this must NOT bump the last-valid-reading timestamp, and it
+  // must show up in the invalid-reading counter so the staleness is visible.
+  runtime.handleMessage(runtime.topicMap.watts, Buffer.from("nan"));
+
+  const bodyAfterNaN = await runtime.metrics();
+  assert.match(bodyAfterNaN, /home_current_power\{exporting="true"\} 1500/);
+  assert.match(
+    bodyAfterNaN,
+    /home_scraper_invalid_reading_total\{metric="home_current_power"\} 1/,
+  );
+
+  const timestampAfter = bodyAfterNaN.match(
+    /home_scraper_last_valid_reading_timestamp_seconds\{metric="home_current_power"\} (\S+)/,
+  )[1];
+  assert.equal(
+    timestampAfter,
+    timestampBefore,
+    "a NaN reading must not refresh the last-valid-reading timestamp",
+  );
+});
